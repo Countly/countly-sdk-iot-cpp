@@ -1,6 +1,5 @@
 #include "Countly.h"
 
-const int thresholdvalue = 10;
 float Rsensor;
 
 Countly countly = Countly("SERVER_URL", "APP_KEY");
