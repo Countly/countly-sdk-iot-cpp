@@ -16,7 +16,6 @@ EthernetClient client;
 byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
 long randomDigit;
 int isEthernetConnected=0;
-byte SNTP_server_IP[]    = { 192, 43, 244, 18}; // time.nist.gov
 
 Countly::Countly(String urlStr, String appKey) {
 	mUrlString = urlStr;
