@@ -1,0 +1,1 @@
+Countly SDK for Intel Edison and Arduino official ethernet shield
