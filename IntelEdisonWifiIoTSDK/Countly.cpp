@@ -10,11 +10,9 @@ const String appVersion = "0.0.1";
 WiFiClient client;
 byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
 long randomDigit;
-char ssid[] = "yourSSID"; //  your network SSID (name)
-char pass[] = "yourSSDIPassword"; // your network password (use for WPA, or use as key for WEP)
 int status = WL_IDLE_STATUS;
 
-Countly::Countly(const char* urlStr, const char* appKey) {
+Countly::Countly(const char* urlStr, const char* appKey, char* ssid, char* pass) {
 	mUrlString = urlStr;
 	mAppKey = appKey;
 	deviceId = getUuidFromEeprom();
@@ -33,7 +31,7 @@ Countly::Countly(const char* urlStr, const char* appKey) {
 	//Initialize serial and wait for port to open:
 	Serial.begin(9600);
 	while (!Serial) {
-		; // wait for serial port to connect.
+		; // wait for serial port to connect. Needed for Leonardo only
 	}
 
 	// check for the presence of the shield:

@@ -9,7 +9,7 @@
 class Countly
 {
   public:
-	Countly (const char* urlStr, const char* appKey);
+	Countly (const char* urlStr, const char* appKey, char* ssid, char* pass);
 	void metrics();
 	void event(String key, int sum);
 	const char* generateUuid();

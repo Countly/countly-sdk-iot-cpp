@@ -2,7 +2,7 @@
 
 float Rsensor;
 
-Countly countly = Countly("SERVER_URL", "APP_KEY");
+Countly	countly = Countly("SERVER_URL", "APP_KEY", "SSID", "SSID_PASSWORD");
 
 void setup() {
 	Serial.begin(9600);
