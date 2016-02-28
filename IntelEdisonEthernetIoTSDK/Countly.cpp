@@ -12,6 +12,7 @@ const String appVersion = "0.0.1";
 EthernetClient client;
 int isEthernetConnected = 0;
 long randomDigit;
+byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
 
 Countly::Countly(const char* urlStr, const char* appKey) {
 	mUrlString = urlStr;
