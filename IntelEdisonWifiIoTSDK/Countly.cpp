@@ -66,7 +66,7 @@ void Countly::metrics() {
 
 	String metricPostParam = "begin_session=1&app_key=" + String(mAppKey)
 			+ "&device_id=" + String(deviceId)
-			+ "&metrics={\"_locale\":\"en\",\"_app_version\":\"" + appVersion
+			+ "&metrics={\"_app_version\":\"" + appVersion
 			+ "\",\"_device\":\"IntelEdison\",\"_os\":\"WiFi\"}";
 
 	Serial.println(metricPostParam);

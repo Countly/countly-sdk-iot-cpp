@@ -39,7 +39,7 @@ void Countly::metrics() {
 
 	String metricApiUrl = "http://" + mUrlString + "/i?begin_session=1&app_key=" +mAppKey + "&device_id=" + String(deviceId);
 
-	String metricPostParam="metrics={\"_locale\":\"en\",\"_app_version\":\""+appVersion+"\",\"_device\":\"Yun\",\"_os\":\"Linux\",\"_os_version\":\""+osVersion+"\"}";
+	String metricPostParam="metrics={\"_app_version\":\""+appVersion+"\",\"_device\":\"Yun\",\"_os\":\"Linux\",\"_os_version\":\""+osVersion+"\"}";
 
 	String filePathStr = folderPath + metricsTextFile;
 		const char *filePath = filePathStr.c_str();
