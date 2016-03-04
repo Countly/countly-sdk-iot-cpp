@@ -1,0 +1,1 @@
+Countly SDK for Arduino official wifi shield
