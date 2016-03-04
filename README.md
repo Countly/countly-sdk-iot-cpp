@@ -7,4 +7,4 @@ Currently supported devices:
 * Intel Edison with Arduino Oficial Ethernet Shield 
 * Arduino Yun
 * Arduino with Arduino Oficial Ethernet Shield 
- 
+* Arduino with Arduino Oficial Wifi Shield
