@@ -16,6 +16,7 @@ int status = WL_IDLE_STATUS;
 unsigned long lastConnectionTime = 0;
 const unsigned long postingInterval = 10L * 1000L;
 unsigned long lastConnectionEventsTime=0;
+char randomCharset[33]="0123456789ABCDEFHIJKLMNOPRSTUVYZ";
 
 Countly::Countly(const char* urlStr, const char* appKey, char* ssid,
 		char* pass) {
@@ -23,19 +24,25 @@ Countly::Countly(const char* urlStr, const char* appKey, char* ssid,
 	mAppKey = appKey;
 	mSsid = ssid;
 	mPass = pass;
-	deviceId = getUuidFromEeprom();
-	Serial.print("DEVICE ID");
-	Serial.println(deviceId);
+}
 
-	if (deviceId == "") {
+void Countly::init(){
+	deviceId = getUuidFromEeprom();
+	bool isDeviceIdValid=false;
+	for(int i=0; i<sizeof(randomCharset) - 1; i++){
+		if(deviceId[0]==randomCharset[i]){
+			isDeviceIdValid=true;
+		}
+	}
+	if (isDeviceIdValid==false) {
 		eepromUtil.eeprom_erase_all();
 		const char* uuid = generateUuid();
 		writeUuidToEeprom(uuid, BUFSIZE);
-		deviceId = uuid;
+		deviceId = getUuidFromEeprom();
 	} else {
 		deviceId = getUuidFromEeprom();
 	}
-
+	connectWifi();
 }
 
 void Countly::metrics() {
@@ -113,7 +120,7 @@ const char* Countly::generateUuid() {
 	String uuidString;
 	for (i = 0; i < BUFSIZE; i++) {
 		randomDigit = random(BUFSIZE);
-		uuidString += "0123456789ABCDEFHIJKLMNOPRSTUVYZ"[randomDigit];
+		uuidString += randomCharset[randomDigit];
 	}
 	uuidString.toCharArray(buf, BUFSIZE);
 	char* retChar = (char*) buf;
