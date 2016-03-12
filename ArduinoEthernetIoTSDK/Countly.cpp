@@ -1,10 +1,5 @@
 #include "Countly.h"
-#include "HardwareSerial.h"
-#include <HttpClient.h>
-#include "WString.h"
-#include <Process.h>
-#include <SPI.h>
-#include <Ethernet.h>
+
 
 String mUrlString, mAppKey;
 const char *deviceId;
@@ -15,36 +10,44 @@ const String appVersion = "0.0.1";
 EthernetClient client;
 byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
 long randomDigit;
-int isEthernetConnected=0;
+int isEthernetConnected = 0;
+char randomCharset[33]="0123456789ABCDEFHIJKLMNOPRSTUVYZ";
 
 Countly::Countly(String urlStr, String appKey) {
 	mUrlString = urlStr;
 	mAppKey = appKey;
+}
+
+void Countly::init() {
 	deviceId = getUuidFromEeprom();
-	if (deviceId == "") {
+	bool isDeviceIdValid = false;
+	for (int i = 0; i < sizeof(randomCharset) - 1; i++) {
+		if (deviceId[0] == randomCharset[i]) {
+			isDeviceIdValid = true;
+		}
+	}
+	if (isDeviceIdValid == false) {
 		eepromUtil.eeprom_erase_all();
-		String uuid = generateUuid();
+		const char* uuid = generateUuid();
 		writeUuidToEeprom(uuid, BUFSIZE);
-		deviceId = uuid.c_str();
+		deviceId = getUuidFromEeprom();
 	} else {
 		deviceId = getUuidFromEeprom();
 	}
-}
-
-void Countly::metrics() {
 	if (isEthernetConnected == 0) {
 		isEthernetConnected = Ethernet.begin(mac);
 		if (isEthernetConnected == 0) {
 			Serial.println("Failed to configure Ethernet using DHCP");
 		}
 	}
+}
 
+void Countly::metrics() {
 	String metricApiUrl = "/i";
 
-	String metricPostParam = "begin_session=1&app_key=" + mAppKey + "&device_id="
-			+ String(deviceId)
-			+ "&metrics={\"_app_version\":\"" + appVersion
-			+ "\",\"_device\":\"Arduino\",\"_os\":\"Ethernet\"}";
+	String metricPostParam = "begin_session=1&app_key=" + mAppKey
+			+ "&device_id=" + String(deviceId) + "&metrics={\"_app_version\":\""
+			+ appVersion + "\",\"_device\":\"Arduino\",\"_os\":\"Ethernet\"}";
 
 	Serial.println(metricPostParam);
 
@@ -79,18 +82,11 @@ void Countly::metrics() {
 void Countly::event(String key, int sum) {
 	metrics();
 
-	if (isEthernetConnected == 0) {
-		isEthernetConnected = Ethernet.begin(mac);
-		if (isEthernetConnected == 0) {
-			Serial.println("Failed to configure Ethernet using DHCP");
-		}
-	}
-
-	String timeStamp = "1455598239";
 	String eventApiUrl = "/i";
 
 	String eventPostParam = "end_session=1&app_key=" + mAppKey + "&device_id="
-			+ String(deviceId) + "&events=[{\"count\":1,\"sum\":" + sum + ",\"key\":\"" + key + "\"}]";
+			+ String(deviceId) + "&events=[{\"count\":1,\"sum\":" + sum
+			+ ",\"key\":\"" + key + "\"}]";
 
 	Serial.println(eventPostParam);
 
@@ -121,16 +117,17 @@ void Countly::event(String key, int sum) {
 	Serial.println(returnString);
 }
 
-String Countly::generateUuid() {
+const char* Countly::generateUuid() {
 	randomSeed(analogRead(0));
 	int i;
 	String uuidString;
 	for (i = 0; i < BUFSIZE; i++) {
 		randomDigit = random(BUFSIZE);
-		uuidString += "0123456789ABCDEFHIJKLMNOPRSTUVYZ"[randomDigit];
+		uuidString += randomCharset[randomDigit];
 	}
-
-	return uuidString;
+	uuidString.toCharArray(buf, BUFSIZE);
+	char* retChar = (char*) buf;
+	return retChar;
 }
 
 const char* Countly::getUuidFromEeprom() {
