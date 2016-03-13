@@ -3,6 +3,8 @@
 const char* mUrlString;
 const char* mAppKey;
 const char* deviceId;
+char* mSsid;
+char* mPass;
 const int BUFSIZE = 32;
 char buf[BUFSIZE];
 EepromUtil eepromUtil;
@@ -11,53 +13,32 @@ WiFiClient client;
 byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
 long randomDigit;
 int status = WL_IDLE_STATUS;
+char randomCharset[33]="0123456789ABCDEFHIJKLMNOPRSTUVYZ";
 
 Countly::Countly(const char* urlStr, const char* appKey, char* ssid, char* pass) {
 	mUrlString = urlStr;
 	mAppKey = appKey;
-	deviceId = getUuidFromEeprom();
-	Serial.print("DEVICE ID");
-	Serial.println(deviceId);
+	mSsid = ssid;
+	mPass = pass;
+}
 
-	if (deviceId == "") {
+void Countly::init(){
+	deviceId = getUuidFromEeprom();
+	bool isDeviceIdValid=false;
+	for(int i=0; i<sizeof(randomCharset) - 1; i++){
+		if(deviceId[0]==randomCharset[i]){
+			isDeviceIdValid=true;
+		}
+	}
+	if (isDeviceIdValid==false) {
 		eepromUtil.eeprom_erase_all();
 		const char* uuid = generateUuid();
 		writeUuidToEeprom(uuid, BUFSIZE);
-		deviceId = uuid;
+		deviceId = getUuidFromEeprom();
 	} else {
 		deviceId = getUuidFromEeprom();
 	}
-
-	//Initialize serial and wait for port to open:
-	Serial.begin(9600);
-	while (!Serial) {
-		; // wait for serial port to connect. Needed for Leonardo only
-	}
-
-	// check for the presence of the shield:
-	if (WiFi.status() == WL_NO_SHIELD) {
-		Serial.println("WiFi shield not present");
-		// don't continue:
-		while (true)
-			;
-	}
-
-	String fv = WiFi.firmwareVersion();
-	if (fv != "1.1.0")
-		Serial.println("Please upgrade the firmware");
-
-	// attempt to connect to Wifi network:
-	while (status != WL_CONNECTED) {
-		Serial.print("Attempting to connect to SSID: ");
-		Serial.println(ssid);
-		// Connect to WPA/WPA2 network. Change this line if using open or WEP network:
-		status = WiFi.begin(ssid, pass);
-
-		// wait 10 seconds for connection:
-		delay(10000);
-	}
-	Serial.println("Connected to wifi");
-	printWifiStatus();
+	connectWifi();
 }
 
 void Countly::metrics() {
@@ -147,7 +128,7 @@ const char* Countly::generateUuid() {
 	String uuidString;
 	for (i = 0; i < BUFSIZE; i++) {
 		randomDigit = random(BUFSIZE);
-		uuidString += "0123456789ABCDEFHIJKLMNOPRSTUVYZ"[randomDigit];
+		uuidString += randomCharset[randomDigit];
 	}
 	uuidString.toCharArray(buf, BUFSIZE);
 	char* retChar = (char*) buf;
@@ -165,6 +146,29 @@ bool Countly::writeUuidToEeprom(String uuid, int len) {
 	char* bufferStr = (char*) buf;
 	eepromUtil.eeprom_write_string(BUFSIZE, bufferStr);
 	return true;
+}
+
+void Countly::connectWifi() {
+	// check for the presence of the shield:
+	if (WiFi.status() == WL_NO_SHIELD) {
+		Serial.println("WiFi shield not present");
+		// don't continue:
+		while (true)
+			;
+	}
+
+	// attempt to connect to Wifi network:
+	while (status != WL_CONNECTED) {
+		Serial.print("Attempting to connect to SSID: ");
+		Serial.println(mSsid);
+		// Connect to WPA/WPA2 network. Change this line if using open or WEP network:
+		status = WiFi.begin(mSsid, mPass);
+
+		// wait 10 seconds for connection:
+		delay(10000);
+	}
+	printWifiStatus();
+	Serial.println("Connected to wifi");
 }
 
 void Countly::printWifiStatus() {

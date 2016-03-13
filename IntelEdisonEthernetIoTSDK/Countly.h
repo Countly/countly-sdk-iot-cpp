@@ -10,6 +10,7 @@ class Countly
 {
   public:
 	Countly (const char* urlStr, const char* appKey);
+	void init();
 	void metrics();
 	void event(String key, int sum);
 	const char* generateUuid();
@@ -18,4 +19,3 @@ class Countly
 };
 
 #endif
-

@@ -10,11 +10,13 @@ class Countly
 {
   public:
 	Countly (const char* urlStr, const char* appKey, char* ssid, char* pass);
+	void init();
 	void metrics();
 	void event(String key, int sum);
 	const char* generateUuid();
     const char* getUuidFromEeprom();
     bool writeUuidToEeprom(String uuid, int len);
+    void connectWifi();
     void printWifiStatus();
 };
 
