@@ -1,1 +1,1 @@
-Countly SDK for NodeMCU official wifi shield
+Countly SDK for NodeMCU Esp8266 Devkit v1 and v2 Arduino code
