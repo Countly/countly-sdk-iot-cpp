@@ -16,16 +16,27 @@ const int BUFSIZE = 32;
 char buf[BUFSIZE];
 EepromUtil eepromUtil;
 const String appVersion="0.0.1";
+char randomCharset[33]="0123456789ABCDEFHIJKLMNOPRSTUVYZ";
+long randomDigit;
 
 Countly::Countly(String urlStr, String appKey) {
 	mUrlString = urlStr;
 	mAppKey = appKey;
+}
+
+void Countly::init(){
 	deviceId = getUuidFromEeprom();
-	if (deviceId == "") {
+	bool isDeviceIdValid=false;
+	for(int i=0; i<sizeof(randomCharset) - 1; i++){
+		if(deviceId[0]==randomCharset[i]){
+			isDeviceIdValid=true;
+		}
+	}
+	if (isDeviceIdValid==false) {
 		eepromUtil.eeprom_erase_all();
-		String uuid = generateUuid();
+		const char* uuid = generateUuid();
 		writeUuidToEeprom(uuid, BUFSIZE);
-		deviceId = uuid.c_str();
+		deviceId = getUuidFromEeprom();
 	} else {
 		deviceId = getUuidFromEeprom();
 	}
@@ -176,15 +187,17 @@ String Countly::getOsVersion() {
 	return result;
 }
 
-String Countly::generateUuid() {
+const char* Countly::generateUuid() {
+	randomSeed(analogRead(0));
 	int i;
 	String uuidString;
-	for (i = 0; i < 31; i++) {
-		int topDigit = random(32);
-		uuidString += "0123456789ABCDEFHIJKLMNOPRSTUVYZ"[topDigit];
+	for (i = 0; i < BUFSIZE; i++) {
+		randomDigit = random(BUFSIZE);
+		uuidString += randomCharset[randomDigit];
 	}
-
-	return uuidString;
+	uuidString.toCharArray(buf, BUFSIZE);
+	char* retChar = (char*) buf;
+	return retChar;
 }
 
 const char* Countly::getUuidFromEeprom() {

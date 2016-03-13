@@ -12,11 +12,12 @@ class Countly
 {
   public:
 	Countly (String urlStr, String appKey);
+	void init();
 	void metrics();
 	void event(String key, int sum);
     String getTimeStamp();
     String getOsVersion();
-    String generateUuid();
+    const char* generateUuid();
     const char* getUuidFromEeprom();
     bool writeUuidToEeprom(String uuid, int len);
     void writeTextToFile(const char *fileName, String text);
@@ -27,4 +28,3 @@ class Countly
 };
 
 #endif
-
