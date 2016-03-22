@@ -3,7 +3,7 @@
 //
 // From http://playground.arduino.cc/Code/EepromUtil
 //
-#include "../CountlyArduinoYun/EepromUtil.h"
+#include "EepromUtil.h"
 
 //
 // Absolute min and max eeprom addresses.
