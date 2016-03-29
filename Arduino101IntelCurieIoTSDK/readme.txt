@@ -1,0 +1,1 @@
+Countly SDK for Arduino/Genuino 101 (Intel Curie Boards) and official ethernet shield
