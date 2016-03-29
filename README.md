@@ -11,6 +11,7 @@ Currently supported devices:
 * Arduino with Arduino Oficial Ethernet Shield 
 * Arduino with Arduino Oficial Wifi Shield
 * Node MCU Esp8266 Devkit v1 and v2 Arduino code
+* Arduino/Genuino 101 (Intel Curie Boards) with Arduino Oficial Ethernet Shield
 
 <!-- ## Documentation 
 
