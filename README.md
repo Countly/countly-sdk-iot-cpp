@@ -6,12 +6,12 @@ Countly can be used to store sensor data coming from IoT devices. This repositor
 Currently supported devices: 
 
 * Intel Edison with builtin wifi (also supporting [Grove sensors](http://www.seeedstudio.com/depot/Grove-Indoor-Environment-Kit-for-Intel-Edison-p-2427.html)) 
-* Intel Edison with Arduino Oficial Ethernet Shield 
+* Intel Edison with Arduino Official Ethernet Shield
 * Arduino Yun
-* Arduino with Arduino Oficial Ethernet Shield 
-* Arduino with Arduino Oficial Wifi Shield
+* Arduino with Arduino Official Ethernet Shield
+* Arduino with Arduino Official Wifi Shield
 * Node MCU Esp8266 Devkit v1 and v2 Arduino code
-* Arduino/Genuino 101 (Intel Curie Boards) with Arduino Oficial Ethernet Shield
+* Arduino/Genuino 101 (Intel Curie Boards) with Arduino Official Ethernet Shield
 
 <!-- ## Documentation 
 
