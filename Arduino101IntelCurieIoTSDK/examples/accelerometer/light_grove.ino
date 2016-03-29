@@ -1,6 +1,6 @@
 #include "Countly.h"
+#include "CurieIMU.h"
 
-float Rsensor;
 IPAddress ipAddress(192, 168, 1, 177);
 Countly countly = Countly("SERVER_URL", "APP_KEY", ipAddress);
 
