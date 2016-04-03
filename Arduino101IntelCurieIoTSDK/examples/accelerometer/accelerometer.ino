@@ -1,7 +1,7 @@
 #include "Countly.h"
 #include "CurieIMU.h"
 
-IPAddress ipAddress(192, 168, 1, 177);
+IPAddress ipAddress(LOCAL_IP_ADDRESS); //E.G 192, 168, 1, 177
 Countly countly = Countly("SERVER_URL", "APP_KEY", ipAddress);
 
 void setup() {
