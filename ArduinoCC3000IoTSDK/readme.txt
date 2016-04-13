@@ -1,0 +1,1 @@
+Countly SDK for Arduino and CC3000 Wifi Module
